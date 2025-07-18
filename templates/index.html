@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Translator - แปลวิดีโอ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #7c3aed;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #1f2937;
+            --light-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-primary);
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .control-panel {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .realtime-panel {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            min-height: 600px;
+        }
+
+        .mode-tabs {
+            display: flex;
+            background: #f3f4f6;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 25px;
+        }
+
+        .mode-tab {
+            flex: 1;
+            padding: 12px 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .mode-tab.active {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            background: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #dc2626);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .realtime-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.processing {
+            background: var(--warning-color);
+        }
+
+        .status-dot.error {
+            background: var(--danger-color);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .progress-section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 6px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e5e7eb;
+            z-index: 1;
+        }
+
+        .step-item {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #6b7280;
+            transition: all 0.3s ease;
+        }
+
+        .step-circle.active {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .step-circle.completed {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 80px;
+        }
+
+        .log-section {
+            background: var(--dark-color);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .log-entry.info {
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .log-entry.success {
+            border-left: 3px solid var(--success-color);
+        }
+
+        .log-entry.warning {
+            border-left: 3px solid var(--warning-color);
+        }
+
+        .log-entry.error {
+            border-left: 3px solid var(--danger-color);
+        }
+
+        .log-time {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .log-message {
+            margin-left: 10px;
+        }
+
+        .text-preview {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .text-preview h4 {
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .text-content {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .download-section {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .download-section.active {
+            display: block;
+        }
+
+        .download-btn {
+            background: white;
+            color: var(--success-color);
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255,255,255,0.3);
+            color: var(--success-color);
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: none;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #991b1b;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: #1e40af;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .step-indicator {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .step-item {
+                flex: 1;
+                min-width: 80px;
+            }
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .file-drop-zone {
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            background: #f9fafb;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-drop-zone:hover {
+            border-color: var(--primary-color);
+            background: #f0f9ff;
+        }
+
+        .file-drop-zone.dragover {
+            border-color: var(--primary-color);
+            background: #eff6ff;
+        }
+
+        .file-icon {
+            font-size: 3rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .file-text {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .file-hint {
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+
+        .form-text {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-language"></i> Video Translator</h1>
+            <p>แอปพลิเคชันแปลวิดีโออัตโนมัติ - แสดงการทำงานแบบ Real-time</p>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="dashboard">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <h3><i class="fas fa-cogs"></i> ตั้งค่า</h3>
+                
+                <!-- Mode Tabs -->
+                <div class="mode-tabs">
+                    <div class="mode-tab active" onclick="switchMode('auto')">
+                        <i class="fas fa-magic"></i><br>อัตโนมัติ
+                    </div>
+                    <div class="mode-tab" onclick="switchMode('step')">
+                        <i class="fas fa-list-ol"></i><br>ทีละขั้นตอน
+                    </div>
+                    <div class="mode-tab" onclick="switchMode('youtube')">
+                        <i class="fab fa-youtube"></i><br>YouTube
+                    </div>
+                </div>
+
+                <!-- Auto Mode Form -->
+                <div id="autoForm" class="form-section active">
+                    <div class="form-group">
+                        <label class="form-label">ไฟล์วิดีโอ</label>
+                        <div class="file-drop-zone" onclick="document.getElementById('autoVideoFile').click()">
+                            <div class="file-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="file-text">คลิกเพื่อเลือกไฟล์หรือลากไฟล์มาวาง</div>
+                            <div class="file-hint">รองรับ MP4, AVI, MOV, MKV ขนาดไม่เกิน 500MB</div>
+                        </div>
+                        <input type="file" id="autoVideoFile" accept="video/*" style="display: none;" onchange="handleFileSelect(this, 'auto')">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">ภาษาต้นฉบับ</label>
+                        <select class="form-control" id="autoSourceLang">
+                            <option value="auto">อัตโนมัติ</option>
+                            <option value="en">English</option>
+                            <option value="th">ไทย</option>
+                            <option value="ja">日本語</option>
+                            <option value="ko">한국어</option>
+                            <option value="zh">中文</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">ภาษาปลายทาง</label>
+                        <select class="form-control" id="autoTargetLang">
+                            <option value="th">ไทย</option>
+                            <option value="en">English</option>
+                            <option value="ja">日本語</option>
+                            <option value="ko">한국어</option>
+                            <option value="zh">中文</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">โมเดลถอดเสียง (STT)</label>
+                        <select class="form-control" id="autoSttModel">
+                            <option value="base">Whisper Base (เร็ว)</option>
+                            <option value="small">Whisper Small (สมดุล)</option>
+                            <option value="medium">Whisper Medium (แม่นยำ)</option>
+                            <option value="large">Whisper Large (แม่นยำสูงสุด)</option>
+                            <option value="thonburian-base">Thonburian Base (ไทย)</option>
+                            <option value="thonburian-small">Thonburian Small (ไทย)</option>
+                            <option value="thonburian-medium">Thonburian Medium (ไทย)</option>
+                            <option value="biodatlab-large-v3">Biodatlab Large V3 (ไทย)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">โหมดการแปล</label>
+                        <select class="form-control" id="autoTranslationMode">
+                            <option value="whisper_translate">Whisper แปลโดยตรง (เร็ว)</option>
+                            <option value="separate_translation">แยกการแปล (NLLB-200)</option>
+                        </select>
+                        <small class="form-text text-muted">
+                            <strong>Whisper แปลโดยตรง:</strong> Whisper ทำ STT + แปลในขั้นตอนเดียว<br>
+                            <strong>แยกการแปล:</strong> Whisper ทำ STT เฉยๆ แล้วใช้ NLLB-200 แปลแยก
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">เสียง TTS</label>
+                        <select class="form-control" id="autoVoiceMode">
+                            <option value="female">ผู้หญิง</option>
+                            <option value="male">ผู้ชาย</option>
+                            <option value="child">เด็ก</option>
+                            <option value="elderly">คนแก่</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">การแยกเสียงร้อง/ดนตรี (UVR)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="autoVocalRemoval" checked>
+                                <span class="checkmark"></span>
+                                เปิดใช้งาน Ultimate Vocal Remover
+                            </label>
+                        </div>
+                        <small class="form-text text-muted">
+                            แยกเสียงร้องออกจากดนตรีเพื่อการแปลที่แม่นยำ และใช้ดนตรีเดิมในการรวมวิดีโอ
+                        </small>
+                    </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">ความเร็ววิดีโอ</label>
+                        <select class="form-control" id="autoVideoSpeed">
+                            <option value="1.0">ปกติ (1x)</option>
+                            <option value="2.0">เร็ว 2 เท่า</option>
+                            <option value="4.0">เร็ว 4 เท่า</option>
+                        </select>
+                    </div>
+
+                    <button class="btn-primary" onclick="startAutoProcessing()" id="autoStartBtn">
+                        <i class="fas fa-play"></i> เริ่มประมวลผลอัตโนมัติ
+                    </button>
+                    <button class="btn-danger" onclick="stopProcessing()" id="autoStopBtn" style="display: none;">
+                        <i class="fas fa-stop"></i> หยุดการทำงาน
+                    </button>
+                    <button class="btn btn-warning" onclick="clearCurrentTask()" id="autoClearBtn" style="display: none; margin-top: 10px;">
+                        <i class="fas fa-times"></i> ล้างสถานะ
+                    </button>
+                </div>
+
+                <!-- Step Mode Form -->
+                <div id="stepForm" class="form-section">
+                    <div class="form-group">
+                        <label class="form-label">ไฟล์วิดีโอ</label>
+                        <div class="file-drop-zone" onclick="document.getElementById('stepVideoFile').click()">
+                            <div class="file-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="file-text">คลิกเพื่อเลือกไฟล์หรือลากไฟล์มาวาง</div>
+                            <div class="file-hint">รองรับ MP4, AVI, MOV, MKV ขนาดไม่เกิน 500MB</div>
+                        </div>
+                        <input type="file" id="stepVideoFile" accept="video/*" style="display: none;" onchange="handleFileSelect(this, 'step')">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">ภาษาต้นฉบับ</label>
+                        <select class="form-control" id="stepSourceLang">
+                            <option value="auto">อัตโนมัติ</option>
+                            <option value="en">English</option>
+                            <option value="th">ไทย</option>
+                            <option value="ja">日本語</option>
+                            <option value="ko">한국어</option>
+                            <option value="zh">中文</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">ภาษาปลายทาง</label>
+                        <select class="form-control" id="stepTargetLang">
+                            <option value="th">ไทย</option>
+                            <option value="en">English</option>
+                            <option value="ja">日本語</option>
+                            <option value="ko">한국어</option>
+                            <option value="zh">中文</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">โมเดลถอดเสียง (STT)</label>
+                        <select class="form-control" id="stepSttModel">
+                            <option value="base">Whisper Base (เร็ว)</option>
+                            <option value="small">Whisper Small (สมดุล)</option>
+                            <option value="medium">Whisper Medium (แม่นยำ)</option>
+                            <option value="large">Whisper Large (แม่นยำสูงสุด)</option>
+                            <option value="thonburian-base">Thonburian Base (ไทย)</option>
+                            <option value="thonburian-small">Thonburian Small (ไทย)</option>
+                            <option value="thonburian-medium">Thonburian Medium (ไทย)</option>
+                            <option value="biodatlab-large-v3">Biodatlab Large V3 (ไทย)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">โหมดการแปล</label>
+                        <select class="form-control" id="stepTranslationMode">
+                            <option value="whisper_translate">Whisper แปลโดยตรง (เร็ว)</option>
+                            <option value="separate_translation">แยกการแปล (NLLB-200)</option>
+                        </select>
+                        <small class="form-text text-muted">
+                            <strong>Whisper แปลโดยตรง:</strong> Whisper ทำ STT + แปลในขั้นตอนเดียว<br>
+                            <strong>แยกการแปล:</strong> Whisper ทำ STT เฉยๆ แล้วใช้ NLLB-200 แปลแยก
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">เสียง TTS</label>
+                        <select class="form-control" id="stepVoiceMode">
+                            <option value="female">ผู้หญิง</option>
+                            <option value="male">ผู้ชาย</option>
+                            <option value="child">เด็ก</option>
+                            <option value="elderly">คนแก่</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">การแยกเสียงร้อง/ดนตรี (UVR)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="stepVocalRemoval" checked>
+                                <span class="checkmark"></span>
+                                เปิดใช้งาน Ultimate Vocal Remover
+                            </label>
+                        </div>
+                        <small class="form-text text-muted">
+                            แยกเสียงร้องออกจากดนตรีเพื่อการแปลที่แม่นยำ และใช้ดนตรีเดิมในการรวมวิดีโอ
+                        </small>
+                    </div>
+
+                    <button class="btn-primary" onclick="startStepProcessing()" id="stepStartBtn">
+                        <i class="fas fa-upload"></i> อัปโหลดและเริ่มขั้นตอนที่ 1
+                    </button>
+                    <button class="btn-danger" onclick="stopProcessing()" id="stepStopBtn" style="display: none;">
+                        <i class="fas fa-stop"></i> หยุดการทำงาน
+                    </button>
+                    <button class="btn btn-warning" onclick="clearCurrentTask()" id="stepClearBtn" style="display: none; margin-top: 10px;">
+                        <i class="fas fa-times"></i> ล้างสถานะ
+                    </button>
+                </div>
+
+                <!-- YouTube Mode Form -->
+                <div id="youtubeForm" class="form-section">
+                    <div class="form-group">
+                        <label class="form-label">YouTube URL</label>
+                        <input type="url" class="form-control" id="youtubeUrl" placeholder="https://www.youtube.com/watch?v=...">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">ภาษาต้นฉบับ</label>
+                        <select class="form-control" id="youtubeSourceLang">
+                            <option value="auto">อัตโนมัติ</option>
+                            <option value="en">English</option>
+                            <option value="th">ไทย</option>
+                            <option value="ja">日本語</option>
+                            <option value="ko">한국어</option>
+                            <option value="zh">中文</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">ภาษาปลายทาง</label>
+                        <select class="form-control" id="youtubeTargetLang">
+                            <option value="th">ไทย</option>
+                            <option value="en">English</option>
+                            <option value="ja">日本語</option>
+                            <option value="ko">한국어</option>
+                            <option value="zh">中文</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">โมเดลถอดเสียง (STT)</label>
+                        <select class="form-control" id="youtubeSttModel">
+                            <option value="base">Whisper Base (เร็ว)</option>
+                            <option value="small">Whisper Small (สมดุล)</option>
+                            <option value="medium">Whisper Medium (แม่นยำ)</option>
+                            <option value="large">Whisper Large (แม่นยำสูงสุด)</option>
+                            <option value="thonburian-base">Thonburian Base (ไทย)</option>
+                            <option value="thonburian-small">Thonburian Small (ไทย)</option>
+                            <option value="thonburian-medium">Thonburian Medium (ไทย)</option>
+                            <option value="biodatlab-large-v3">Biodatlab Large V3 (ไทย)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">โหมดการแปล</label>
+                        <select class="form-control" id="youtubeTranslationMode">
+                            <option value="whisper_translate">Whisper แปลโดยตรง (เร็ว)</option>
+                            <option value="separate_translation">แยกการแปล (NLLB-200)</option>
+                        </select>
+                        <small class="form-text text-muted">
+                            <strong>Whisper แปลโดยตรง:</strong> Whisper ทำ STT + แปลในขั้นตอนเดียว<br>
+                            <strong>แยกการแปล:</strong> Whisper ทำ STT เฉยๆ แล้วใช้ NLLB-200 แปลแยก
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">เสียง TTS</label>
+                        <select class="form-control" id="youtubeVoiceMode">
+                            <option value="female">ผู้หญิง</option>
+                            <option value="male">ผู้ชาย</option>
+                            <option value="child">เด็ก</option>
+                            <option value="elderly">คนแก่</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">การแยกเสียงร้อง/ดนตรี (UVR)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="youtubeVocalRemoval" checked>
+                                <span class="checkmark"></span>
+                                เปิดใช้งาน Ultimate Vocal Remover
+                            </label>
+                        </div>
+                        <small class="form-text text-muted">
+                            แยกเสียงร้องออกจากดนตรีเพื่อการแปลที่แม่นยำ และใช้ดนตรีเดิมในการรวมวิดีโอ
+                        </small>
+                    </div>
+
+                    <button class="btn-primary" onclick="startYouTubeProcessing()" id="youtubeStartBtn">
+                        <i class="fab fa-youtube"></i> เริ่มประมวลผล YouTube
+                    </button>
+                    <button class="btn-danger" onclick="clearCurrentTask()" id="youtubeClearBtn" style="display: none; margin-top: 10px;">
+                        <i class="fas fa-times"></i> ล้างสถานะ
+                    </button>
+                    <button class="btn-danger" onclick="stopProcessing()" id="youtubeStopBtn" style="display: none;">
+                        <i class="fas fa-stop"></i> หยุดการทำงาน
+                    </button>
+                </div>
+            </div>
+
+            <!-- Real-time Panel -->
+            <div class="realtime-panel">
+                <div class="realtime-header">
+                    <h3><i class="fas fa-chart-line"></i> การทำงานแบบ Real-time</h3>
+                    <div class="status-indicator">
+                        <div class="status-dot" id="statusDot"></div>
+                        <span id="statusText">พร้อมใช้งาน</span>
+                    </div>
+                </div>
+
+                <!-- Progress Section -->
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <h4>ความคืบหน้า</h4>
+                        <span id="progressText">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+                <!-- Step Indicator -->
+                <div class="step-indicator">
+                    <div class="step-item">
+                        <div class="step-circle" id="step1">1</div>
+                        <div class="step-label">อัปโหลด</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-circle" id="step2">2</div>
+                        <div class="step-label">แยกเสียง</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-circle" id="step3">3</div>
+                        <div class="step-label">ถอดเสียง/แปล</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-circle" id="step4">4</div>
+                        <div class="step-label">แปลภาษา</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-circle" id="step5">5</div>
+                        <div class="step-label">สร้างเสียง</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-circle" id="step6">6</div>
+                        <div class="step-label">รวมไฟล์</div>
+                    </div>
+                </div>
+
+                <!-- Step Controls (for step mode) -->
+                <div id="stepControls" style="display: none;">
+                    <div class="row" style="margin: 0;">
+                        <div class="col-4">
+                            <button class="btn-primary" onclick="processStep(2)" style="margin: 5px;">
+                                <i class="fas fa-cut"></i> ขั้นตอนที่ 2: แยกเสียง
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn-primary" onclick="processStep(3)" style="margin: 5px;">
+                                <i class="fas fa-microphone"></i> ขั้นตอนที่ 3: ถอดเสียง/แปล
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn-primary" onclick="processStep(4)" style="margin: 5px;">
+                                <i class="fas fa-language"></i> ขั้นตอนที่ 4: แปลภาษา
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 0;">
+                        <div class="col-6">
+                            <button class="btn-primary" onclick="processStep(5)" style="margin: 5px;">
+                                <i class="fas fa-volume-up"></i> ขั้นตอนที่ 5: สร้างเสียง
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn-primary" onclick="processStep(6)" style="margin: 5px;">
+                                <i class="fas fa-film"></i> ขั้นตอนที่ 6: รวมไฟล์
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Preview -->
+                <div id="textPreview" class="text-preview" style="display: none;">
+                    <h4><i class="fas fa-file-text"></i> ตัวอย่างข้อความ</h4>
+                    <div class="text-content" id="originalText"></div>
+                    <div class="text-content" id="translatedText" style="margin-top: 10px;"></div>
+                </div>
+
+                <!-- Download Section -->
+                <div id="downloadSection" class="download-section">
+                    <h4><i class="fas fa-download"></i> ประมวลผลเสร็จสิ้น!</h4>
+                    <p>ไฟล์วิดีโอที่แปลแล้วพร้อมให้ดาวน์โหลด</p>
+                    <a href="#" class="download-btn" id="downloadLink">
+                        <i class="fas fa-download"></i> ดาวน์โหลดวิดีโอ
+                    </a>
+                </div>
+
+                <!-- Log Section -->
+                <div class="log-section">
+                    <h4><i class="fas fa-terminal"></i> บันทึกการทำงาน</h4>
+                    <div id="logContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alertContainer"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentMode = 'auto';
+        let currentTaskId = '';
+        let currentStep = 1;
+        let progressInterval = null;
+
+        // Switch between modes
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // Update tabs
+            document.querySelectorAll('.mode-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Update forms
+            document.querySelectorAll('.form-section').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.getElementById(mode + 'Form').classList.add('active');
+            
+            // Reset UI
+            resetUI();
+            addLog('info', `เปลี่ยนเป็นโหมด: ${mode === 'auto' ? 'อัตโนมัติ' : mode === 'step' ? 'ทีละขั้นตอน' : 'YouTube'}`);
+        }
+
+        // Handle file selection
+        function handleFileSelect(input, mode) {
+            const file = input.files[0];
+            if (file) {
+                const dropZone = input.previousElementSibling;
+                dropZone.querySelector('.file-icon').innerHTML = '<i class="fas fa-file-video"></i>';
+                dropZone.querySelector('.file-text').textContent = file.name;
+                dropZone.querySelector('.file-hint').textContent = `ขนาด: ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+                
+                addLog('success', `เลือกไฟล์: ${file.name}`);
+            }
+        }
+
+        // File drop zone functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropZones = document.querySelectorAll('.file-drop-zone');
+            
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('dragover');
+                });
+                
+                zone.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('dragover');
+                });
+                
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('dragover');
+                    
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        const input = this.nextElementSibling;
+                        input.files = files;
+                        handleFileSelect(input, currentMode);
+                    }
+                });
+            });
+        });
+
+        // Start auto processing
+        async function startAutoProcessing() {
+            const videoFile = document.getElementById('autoVideoFile').files[0];
+            if (!videoFile) {
+                showAlert('กรุณาเลือกไฟล์วิดีโอ', 'warning');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('video', videoFile);
+            formData.append('source_lang', document.getElementById('autoSourceLang').value);
+            formData.append('target_lang', document.getElementById('autoTargetLang').value);
+            formData.append('stt_model', document.getElementById('autoSttModel').value);
+            formData.append('translation_mode', document.getElementById('autoTranslationMode').value);
+            formData.append('voice_mode', document.getElementById('autoVoiceMode').value);
+            formData.append('video_speed', document.getElementById('autoVideoSpeed').value);
+            formData.append('enable_vocal_removal', document.getElementById('autoVocalRemoval').checked);
+
+            await startProcessing('/api/upload/auto', formData, 'อัตโนมัติ');
+        }
+
+        // Start step processing
+        async function startStepProcessing() {
+            const videoFile = document.getElementById('stepVideoFile').files[0];
+            if (!videoFile) {
+                showAlert('กรุณาเลือกไฟล์วิดีโอ', 'warning');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('video', videoFile);
+            formData.append('source_lang', document.getElementById('stepSourceLang').value);
+            formData.append('target_lang', document.getElementById('stepTargetLang').value);
+            formData.append('stt_model', document.getElementById('stepSttModel').value);
+            formData.append('translation_mode', document.getElementById('stepTranslationMode').value);
+            formData.append('voice_mode', document.getElementById('stepVoiceMode').value);
+            formData.append('enable_vocal_removal', document.getElementById('stepVocalRemoval').checked);
+
+            await startProcessing('/api/upload/step', formData, 'ทีละขั้นตอน');
+        }
+
+        // Start YouTube processing
+        async function startYouTubeProcessing() {
+            const videoUrl = document.getElementById('youtubeUrl').value;
+            if (!videoUrl) {
+                showAlert('กรุณาใส่ YouTube URL', 'warning');
+                return;
+            }
+
+            const data = {
+                video_url: videoUrl,
+                source_lang: document.getElementById('youtubeSourceLang').value,
+                target_lang: document.getElementById('youtubeTargetLang').value,
+                stt_model: document.getElementById('youtubeSttModel').value,
+                translation_mode: document.getElementById('youtubeTranslationMode').value,
+                voice_mode: document.getElementById('youtubeVoiceMode').value,
+                enable_vocal_removal: document.getElementById('youtubeVocalRemoval').checked
+            };
+
+            await startProcessing('/api/youtube/realtime', data, 'YouTube');
+        }
+
+        // Generic processing function
+        async function startProcessing(endpoint, data, mode) {
+            try {
+                updateStatus('processing', 'กำลังเริ่มประมวลผล...');
+                addLog('info', `เริ่มประมวลผลโหมด${mode}`);
+                
+                // Show stop button, hide start button
+                showStopButtons(true);
+                showStartButtons(false);
+                
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    body: data instanceof FormData ? data : JSON.stringify(data),
+                    headers: data instanceof FormData ? {} : {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+                
+                if (result.task_id) {
+                    currentTaskId = result.task_id;
+                    addLog('success', `ได้รับ Task ID: ${result.task_id}`);
+                    
+                    if (mode === 'ทีละขั้นตอน') {
+                        currentStep = 2;
+                        updateStepIndicator(2);
+                        // Mark step 1 as completed
+                        document.getElementById('step1').classList.add('completed');
+                        document.getElementById('stepControls').style.display = 'block';
+                        addLog('info', 'เริ่มขั้นตอนที่ 2: แยกเสียง');
+                    } else {
+                        startProgressMonitoring();
+                    }
+                } else {
+                    addLog('error', result.error || 'เกิดข้อผิดพลาด');
+                    showAlert(result.error || 'เกิดข้อผิดพลาด', 'danger');
+                    // Show start button again on error
+                    showStopButtons(false);
+                    showStartButtons(true);
+                }
+            } catch (error) {
+                addLog('error', 'เกิดข้อผิดพลาดในการเชื่อมต่อ');
+                showAlert('เกิดข้อผิดพลาดในการเชื่อมต่อ', 'danger');
+                // Show start button again on error
+                showStopButtons(false);
+                showStartButtons(true);
+            }
+        }
+
+        // Process step (for step mode)
+        async function processStep(step) {
+            if (!currentTaskId) {
+                showAlert('กรุณาอัปโหลดไฟล์ก่อน', 'danger');
+                return;
+            }
+
+            try {
+                updateStatus('processing', `กำลังประมวลผลขั้นตอนที่ ${step}...`);
+                addLog('info', `เริ่มขั้นตอนที่ ${step}`);
+                
+                const response = await fetch(`/api/step/${currentTaskId}/${step}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                });
+
+                const result = await response.json();
+                
+                if (result.success || result.status === 'completed') {
+                    currentStep = result.next_step || step + 1;
+                    updateStepIndicator(step);
+                    addLog('success', `ขั้นตอนที่ ${step} ประมวลผลสำเร็จ`);
+                    
+                    // Handle translation mode
+                    if (result.translation_mode === 'whisper_translate' && step === 3) {
+                        addLog('info', 'ใช้โหมด Whisper translate - ข้ามขั้นตอนการแปล');
+                        updateStepIndicator(4); // Mark translation step as completed
+                    }
+                    
+                    if (step === 3 || step === 4) {
+                        await loadTextPreview();
+                    }
+                    
+                    if (step === 6 || (result.next_step && result.next_step > 6)) {
+                        document.getElementById('downloadSection').classList.add('active');
+                        document.getElementById('downloadLink').href = `/api/download/${currentTaskId}`;
+                        updateStatus('completed', 'ประมวลผลเสร็จสิ้น');
+                    }
+                } else {
+                    addLog('error', result.error || 'เกิดข้อผิดพลาด');
+                    showAlert(result.error || 'เกิดข้อผิดพลาด', 'danger');
+                }
+            } catch (error) {
+                addLog('error', 'เกิดข้อผิดพลาดในการเชื่อมต่อ');
+                showAlert('เกิดข้อผิดพลาดในการเชื่อมต่อ', 'danger');
+            }
+        }
+
+        // Load text preview
+        async function loadTextPreview() {
+            try {
+                const [sttResponse, translationResponse] = await Promise.all([
+                    fetch(`/api/text/${currentTaskId}/stt`),
+                    fetch(`/api/text/${currentTaskId}/translation`)
+                ]);
+
+                if (sttResponse.ok) {
+                    const sttData = await sttResponse.json();
+                    document.getElementById('originalText').innerHTML = `<strong>ข้อความต้นฉบับ:</strong><br>${sttData.text || 'ไม่มีข้อความ'}`;
+                }
+
+                if (translationResponse.ok) {
+                    const translationData = await translationResponse.json();
+                    document.getElementById('translatedText').innerHTML = `<strong>ข้อความที่แปลแล้ว:</strong><br>${translationData.text || 'ไม่มีข้อความ'}`;
+                }
+
+                document.getElementById('textPreview').style.display = 'block';
+                addLog('info', 'โหลดตัวอย่างข้อความสำเร็จ');
+            } catch (error) {
+                addLog('error', 'ไม่สามารถโหลดตัวอย่างข้อความได้');
+            }
+        }
+
+        // Start progress monitoring
+        function startProgressMonitoring() {
+            if (progressInterval) clearInterval(progressInterval);
+            
+            progressInterval = setInterval(async () => {
+                if (!currentTaskId) return;
+
+                try {
+                    const response = await fetch(`/api/status/${currentTaskId}`);
+                    
+                    // Handle 404 - job not found (cleared or doesn't exist)
+                    if (response.status === 404) {
+                        clearInterval(progressInterval);
+                        addLog('warning', 'งานไม่พบ (อาจถูกล้างหรือเสร็จสิ้นแล้ว)');
+                        updateStatus('ready', 'พร้อมใช้งาน');
+                        currentTaskId = '';
+                        showStopButtons(false);
+                        showStartButtons(true);
+                        return;
+                    }
+                    
+                    const result = await response.json();
+
+                    if (result.status === 'completed') {
+                        clearInterval(progressInterval);
+                        updateProgress(100, 'ประมวลผลเสร็จสิ้น');
+                        document.getElementById('downloadSection').classList.add('active');
+                        document.getElementById('downloadLink').href = `/api/download/${currentTaskId}`;
+                        updateStatus('completed', 'ประมวลผลเสร็จสิ้น');
+                        addLog('success', 'ประมวลผลเสร็จสิ้นแล้ว!');
+                    } else if (result.status === 'processing') {
+                        updateProgress(result.progress || 0, result.message || 'กำลังประมวลผล...');
+                        addLog('info', result.message || 'กำลังประมวลผล...');
+                    } else if (result.status === 'error') {
+                        clearInterval(progressInterval);
+                        addLog('error', result.error || 'เกิดข้อผิดพลาดในการประมวลผล');
+                        showAlert(result.error || 'เกิดข้อผิดพลาดในการประมวลผล', 'danger');
+                    }
+                } catch (error) {
+                    addLog('error', 'เกิดข้อผิดพลาดในการติดตามความคืบหน้า');
+                }
+            }, 1000);
+        }
+
+        // Update status
+        function updateStatus(status, message) {
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            
+            statusDot.className = 'status-dot ' + status;
+            statusText.textContent = message;
+        }
+
+        // Update progress
+        function updateProgress(progress, message) {
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            progressFill.style.width = progress + '%';
+            progressText.textContent = progress + '%';
+        }
+
+        // Update step indicator
+        function updateStepIndicator(step) {
+            const stepCircles = document.querySelectorAll('.step-circle');
+            stepCircles.forEach((circle, index) => {
+                circle.className = 'step-circle';
+                if (index + 1 < step) {
+                    circle.classList.add('completed');
+                } else if (index + 1 === step) {
+                    circle.classList.add('active');
+                }
+            });
+            
+            // Special handling for step 1 (upload) - always completed
+            document.getElementById('step1').classList.add('completed');
+        }
+
+        // Add log entry
+        function addLog(type, message) {
+            const logContainer = document.getElementById('logContainer');
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            
+            const now = new Date();
+            const time = now.toLocaleTimeString();
+            
+            logEntry.innerHTML = `
+                <span class="log-time">${time}</span>
+                <span class="log-message">${message}</span>
+            `;
+            
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // Show alert
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            alertContainer.appendChild(alertDiv);
+
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // Reset UI
+        function resetUI() {
+            updateStatus('ready', 'พร้อมใช้งาน');
+            updateProgress(0, '0%');
+            updateStepIndicator(1);
+            document.getElementById('stepControls').style.display = 'none';
+            document.getElementById('textPreview').style.display = 'none';
+            document.getElementById('downloadSection').classList.remove('active');
+            document.getElementById('logContainer').innerHTML = '';
+            currentTaskId = '';
+            currentStep = 1;
+            
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+        }
+
+        // Stop processing function
+        async function stopProcessing() {
+            if (!currentTaskId) {
+                showAlert('ไม่มีงานที่กำลังประมวลผล', 'warning');
+                return;
+            }
+
+            try {
+                addLog('warning', 'กำลังหยุดการทำงาน...');
+                updateStatus('processing', 'กำลังหยุดการทำงาน...');
+                
+                const response = await fetch(`/api/stop/${currentTaskId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    addLog('success', 'หยุดการทำงานสำเร็จ');
+                    updateStatus('ready', 'พร้อมใช้งาน');
+                    showStopButtons(false);
+                    showStartButtons(true);
+                    resetUI();
+                } else {
+                    addLog('error', result.error || 'ไม่สามารถหยุดการทำงานได้');
+                    showAlert(result.error || 'ไม่สามารถหยุดการทำงานได้', 'danger');
+                }
+            } catch (error) {
+                addLog('error', 'เกิดข้อผิดพลาดในการหยุดการทำงาน');
+                showAlert('เกิดข้อผิดพลาดในการหยุดการทำงาน', 'danger');
+            }
+        }
+
+        // Clear current task and stop polling
+        function clearCurrentTask() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+            currentTaskId = '';
+            updateStatus('ready', 'พร้อมใช้งาน');
+            showStopButtons(false);
+            showStartButtons(true);
+            addLog('info', 'ล้างสถานะงานปัจจุบันแล้ว');
+        }
+
+        // Show/hide stop buttons
+        function showStopButtons(show) {
+            const stopButtons = ['autoStopBtn', 'stepStopBtn', 'youtubeStopBtn'];
+            const clearButtons = ['autoClearBtn', 'stepClearBtn', 'youtubeClearBtn'];
+            
+            stopButtons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.style.display = show ? 'block' : 'none';
+                }
+            });
+            
+            clearButtons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.style.display = show ? 'block' : 'none';
+                }
+            });
+        }
+
+        // Show/hide start buttons
+        function showStartButtons(show) {
+            const startButtons = ['autoStartBtn', 'stepStartBtn', 'youtubeStartBtn'];
+            startButtons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.style.display = show ? 'block' : 'none';
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            addLog('info', 'ระบบพร้อมใช้งาน');
+            updateStatus('ready', 'พร้อมใช้งาน');
+            
+            // Clear any existing task ID to prevent polling for old jobs
+            currentTaskId = '';
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+        });
+    </script>
+</body>
+</html> 

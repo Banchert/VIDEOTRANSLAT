@@ -1,0 +1,35 @@
+{
+    "model_name": "LaoFemale_V1",
+    "model_type": "coqui_tts",
+    "language": "lo",
+    "voice_gender": "female",
+    "model_version": "1.0",
+    "description": "Lao Female Voice Model V1 - Natural Lao language voice",
+    "author": "Video Translator Team",
+    "created_date": "2025-01-15",
+    "model_path": "TTS-MODEL/LaoFemale_V1",
+    "supported_formats": ["wav", "mp3", "ogg"],
+    "sample_rate": 22050,
+    "bit_rate": 32000,
+    "channels": 1,
+    "vocoder": "hifigan",
+    "encoder": "tacotron2",
+    "training_data": {
+        "total_samples": 3000,
+        "total_duration_hours": 6,
+        "audio_quality": "high",
+        "noise_reduction": true,
+        "normalization": true
+    },
+    "performance": {
+        "inference_speed": "fast",
+        "memory_usage": "low",
+        "quality_score": 4.0
+    },
+    "usage": {
+        "max_text_length": 500,
+        "recommended_text_length": 100,
+        "supported_punctuation": true,
+        "emotion_support": false
+    }
+} 

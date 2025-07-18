@@ -1,0 +1,350 @@
+/* Thai Font and Special Styles */
+
+/* Import Thai fonts */
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap');
+
+/* Thai Font Classes */
+.font-thai-sarabun {
+    font-family: 'Sarabun', sans-serif;
+}
+
+.font-thai-noto {
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+/* Apply Thai fonts to specific elements */
+body {
+    font-family: 'Noto Sans Thai', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Sarabun', 'Noto Sans Thai', sans-serif;
+    font-weight: 700;
+}
+
+/* Thai-specific text utilities */
+.text-thai {
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+.text-thai-bold {
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 700;
+}
+
+.text-thai-light {
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 300;
+}
+
+/* Thai language specific styles */
+[lang="th"] {
+    font-family: 'Noto Sans Thai', sans-serif;
+    line-height: 1.8;
+}
+
+/* Thai number formatting */
+.thai-number {
+    font-family: 'Sarabun', sans-serif;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Thai date/time formatting */
+.thai-date {
+    font-family: 'Sarabun', sans-serif;
+}
+
+/* Thai currency formatting */
+.thai-currency {
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 600;
+}
+
+/* Thai form labels */
+.form-label[for*="thai"],
+.form-label[for*="Thai"] {
+    font-family: 'Noto Sans Thai', sans-serif;
+    font-weight: 600;
+}
+
+/* Thai button text */
+.btn[data-lang="th"],
+.btn[data-lang="Thai"] {
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 600;
+}
+
+/* Thai alert messages */
+.alert[data-lang="th"],
+.alert[data-lang="Thai"] {
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+/* Thai progress text */
+.progress[data-lang="th"] .progress-bar {
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 600;
+}
+
+/* Thai badge text */
+.badge[data-lang="th"],
+.badge[data-lang="Thai"] {
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 600;
+}
+
+/* Thai card titles */
+.card[data-lang="th"] .card-title,
+.card[data-lang="Thai"] .card-title {
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 700;
+}
+
+/* Thai modal content */
+.modal[data-lang="th"] .modal-title,
+.modal[data-lang="Thai"] .modal-title {
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 700;
+}
+
+.modal[data-lang="th"] .modal-body,
+.modal[data-lang="Thai"] .modal-body {
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+/* Thai tooltip content */
+.tooltip[data-lang="th"] .tooltip-inner,
+.tooltip[data-lang="Thai"] .tooltip-inner {
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+/* Thai dropdown content */
+.dropdown-menu[data-lang="th"] .dropdown-item,
+.dropdown-menu[data-lang="Thai"] .dropdown-item {
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+/* Thai table content */
+.table[data-lang="th"] th,
+.table[data-lang="th"] td,
+.table[data-lang="Thai"] th,
+.table[data-lang="Thai"] td {
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+/* Thai list content */
+.list-group[data-lang="th"] .list-group-item,
+.list-group[data-lang="Thai"] .list-group-item {
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+/* Thai navigation */
+.nav[data-lang="th"] .nav-link,
+.nav[data-lang="Thai"] .nav-link {
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 600;
+}
+
+/* Thai breadcrumb */
+.breadcrumb[data-lang="th"] .breadcrumb-item,
+.breadcrumb[data-lang="Thai"] .breadcrumb-item {
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+/* Thai pagination */
+.pagination[data-lang="th"] .page-link,
+.pagination[data-lang="Thai"] .page-link {
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 600;
+}
+
+/* Thai form validation messages */
+.invalid-feedback[data-lang="th"],
+.invalid-feedback[data-lang="Thai"] {
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+.valid-feedback[data-lang="th"],
+.valid-feedback[data-lang="Thai"] {
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+/* Thai placeholder text */
+::placeholder[data-lang="th"],
+::placeholder[data-lang="Thai"] {
+    font-family: 'Noto Sans Thai', sans-serif;
+    color: #6c757d;
+}
+
+/* Thai selection text */
+::selection[data-lang="th"],
+::selection[data-lang="Thai"] {
+    background: var(--primary-color);
+    color: white;
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+/* Thai focus styles */
+*:focus[data-lang="th"],
+*:focus[data-lang="Thai"] {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Thai hover effects */
+*:hover[data-lang="th"],
+*:hover[data-lang="Thai"] {
+    transition: all 0.3s ease;
+}
+
+/* Thai animation keyframes */
+@keyframes thaiFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes thaiSlideIn {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes thaiPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Thai animation classes */
+.thai-fade-in {
+    animation: thaiFadeIn 0.5s ease-out;
+}
+
+.thai-slide-in {
+    animation: thaiSlideIn 0.3s ease-out;
+}
+
+.thai-pulse {
+    animation: thaiPulse 2s infinite;
+}
+
+/* Thai responsive text sizing */
+@media (max-width: 768px) {
+    .text-thai {
+        font-size: 0.95rem;
+    }
+    
+    .text-thai-bold {
+        font-size: 1rem;
+    }
+    
+    h1[data-lang="th"],
+    h1[data-lang="Thai"] {
+        font-size: 1.8rem;
+    }
+    
+    h2[data-lang="th"],
+    h2[data-lang="Thai"] {
+        font-size: 1.5rem;
+    }
+    
+    h3[data-lang="th"],
+    h3[data-lang="Thai"] {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .text-thai {
+        font-size: 0.9rem;
+    }
+    
+    .text-thai-bold {
+        font-size: 0.95rem;
+    }
+    
+    h1[data-lang="th"],
+    h1[data-lang="Thai"] {
+        font-size: 1.6rem;
+    }
+    
+    h2[data-lang="th"],
+    h2[data-lang="Thai"] {
+        font-size: 1.4rem;
+    }
+    
+    h3[data-lang="th"],
+    h3[data-lang="Thai"] {
+        font-size: 1.2rem;
+    }
+}
+
+/* Thai print styles */
+@media print {
+    .text-thai,
+    .text-thai-bold,
+    .text-thai-light {
+        font-family: 'Sarabun', serif;
+    }
+    
+    [data-lang="th"],
+    [data-lang="Thai"] {
+        font-family: 'Sarabun', serif;
+    }
+}
+
+/* Thai dark mode support */
+@media (prefers-color-scheme: dark) {
+    .text-thai {
+        color: #e0e0e0;
+    }
+    
+    .text-thai-bold {
+        color: #ffffff;
+    }
+}
+
+/* Thai accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .thai-fade-in,
+    .thai-slide-in,
+    .thai-pulse {
+        animation: none;
+    }
+}
+
+/* Thai high contrast mode */
+@media (prefers-contrast: high) {
+    .text-thai {
+        font-weight: 600;
+    }
+    
+    .text-thai-bold {
+        font-weight: 800;
+    }
+}
+
+/* Thai reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+} 

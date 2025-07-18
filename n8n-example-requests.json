@@ -1,0 +1,212 @@
+{
+  "examples": {
+    "auto_mode": {
+      "description": "โหมดอัตโนมัติ - ประมวลผลทั้งหมดในครั้งเดียว",
+      "webhook_url": "http://localhost:5678/webhook/video-translate",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "mode": "auto",
+        "video_file": "base64_encoded_video_data_or_file_path",
+        "source_language": "th",
+        "target_language": "en",
+        "voice_mode": "female",
+        "video_speed": "1.0"
+      },
+      "curl_example": "curl -X POST http://localhost:5678/webhook/video-translate \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"mode\": \"auto\",\n    \"video_file\": \"base64_encoded_video_data\",\n    \"source_language\": \"th\",\n    \"target_language\": \"en\",\n    \"voice_mode\": \"female\",\n    \"video_speed\": \"1.0\"\n  }'"
+    },
+    "step_mode": {
+      "description": "โหมดทีละขั้นตอน - ควบคุมการประมวลผลแต่ละขั้นตอน",
+      "webhook_url": "http://localhost:5678/webhook/video-translate",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "mode": "step",
+        "video_file": "base64_encoded_video_data_or_file_path",
+        "source_language": "th",
+        "target_language": "en",
+        "voice_mode": "female",
+        "video_speed": "1.0"
+      },
+      "curl_example": "curl -X POST http://localhost:5678/webhook/video-translate \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"mode\": \"step\",\n    \"video_file\": \"base64_encoded_video_data\",\n    \"source_language\": \"th\",\n    \"target_language\": \"en\",\n    \"voice_mode\": \"female\",\n    \"video_speed\": \"1.0\"\n  }'"
+    },
+    "youtube_mode": {
+      "description": "โหมด YouTube - ประมวลผลวิดีโอจาก YouTube URL",
+      "webhook_url": "http://localhost:5678/webhook/video-translate",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "mode": "youtube",
+        "youtube_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "source_language": "en",
+        "target_language": "th",
+        "voice_mode": "male",
+        "video_speed": "2.0"
+      },
+      "curl_example": "curl -X POST http://localhost:5678/webhook/video-translate \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"mode\": \"youtube\",\n    \"youtube_url\": \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\",\n    \"source_language\": \"en\",\n    \"target_language\": \"th\",\n    \"voice_mode\": \"male\",\n    \"video_speed\": \"2.0\"\n  }'"
+    },
+    "test_translation": {
+      "description": "ทดสอบการแปลภาษา",
+      "webhook_url": "http://localhost:5678/webhook/video-translate",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "mode": "test",
+        "test_text": "สวัสดีครับ นี่คือการทดสอบการแปลภาษา",
+        "source_language": "th",
+        "target_language": "en"
+      },
+      "curl_example": "curl -X POST http://localhost:5678/webhook/video-translate \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"mode\": \"test\",\n    \"test_text\": \"สวัสดีครับ นี่คือการทดสอบการแปลภาษา\",\n    \"source_language\": \"th\",\n    \"target_language\": \"en\"\n  }'"
+    },
+    "get_system_status": {
+      "description": "ตรวจสอบสถานะระบบ",
+      "webhook_url": "http://localhost:5678/webhook/video-translate",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "mode": "status"
+      },
+      "curl_example": "curl -X POST http://localhost:5678/webhook/video-translate \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"mode\": \"status\"\n  }'"
+    }
+  },
+  "supported_languages": {
+    "source_languages": [
+      "auto", "en", "th", "ja", "ko", "zh", "vi", "hi", "es", "fr", "de", "it", "pt", "ru", "ar", "tr", "pl", "nl", "sv", "da", "no", "fi", "hu", "cs", "sk", "ro", "bg", "hr", "sl", "et", "lv", "lt", "id", "ms", "tl", "bn", "ur", "fa", "he", "el", "uk", "be", "mk", "sr", "bs", "me", "sq", "lo"
+    ],
+    "target_languages": [
+      "en", "th", "ja", "ko", "zh", "vi", "hi", "es", "fr", "de", "it", "pt", "ru", "ar", "tr", "pl", "nl", "sv", "da", "no", "fi", "hu", "cs", "sk", "ro", "bg", "hr", "sl", "et", "lv", "lt", "id", "ms", "tl", "bn", "ur", "fa", "he", "el", "uk", "be", "mk", "sr", "bs", "me", "sq", "lo"
+    ]
+  },
+  "voice_modes": [
+    "female", "male", "child", "elderly", "robot", "whisper", "shout", "sing"
+  ],
+  "video_speeds": [
+    "1.0", "2.0", "4.0"
+  ],
+  "response_examples": {
+    "success_response": {
+      "success": true,
+      "task_id": "550e8400-e29b-41d4-a716-446655440000",
+      "status": "completed",
+      "message": "Video translation completed successfully",
+      "download_url": "http://localhost:5556/api/download/550e8400-e29b-41d4-a716-446655440000",
+      "original_text": "สวัสดีครับ นี่คือวิดีโอทดสอบ",
+      "translated_text": "Hello, this is a test video",
+      "processing_time": "120.5",
+      "file_size": "15.2MB"
+    },
+    "processing_response": {
+      "success": true,
+      "task_id": "550e8400-e29b-41d4-a716-446655440000",
+      "status": "processing",
+      "message": "Video is being processed",
+      "progress": 45,
+      "current_step": "Step 4: Translation",
+      "estimated_time": "60 seconds remaining"
+    },
+    "error_response": {
+      "success": false,
+      "error": "Invalid video file format",
+      "message": "Please provide a valid video file (mp4, avi, mov, mkv, wmv, flv, webm)",
+      "supported_formats": ["mp4", "avi", "mov", "mkv", "wmv", "flv", "webm"]
+    }
+  },
+  "python_examples": {
+    "auto_mode_python": "import requests\nimport base64\n\n# อ่านไฟล์วิดีโอ\nwith open('video.mp4', 'rb') as f:\n    video_data = base64.b64encode(f.read()).decode('utf-8')\n\n# ส่งคำขอ\nurl = 'http://localhost:5678/webhook/video-translate'\ndata = {\n    'mode': 'auto',\n    'video_file': video_data,\n    'source_language': 'th',\n    'target_language': 'en',\n    'voice_mode': 'female',\n    'video_speed': '1.0'\n}\n\nresponse = requests.post(url, json=data)\nprint(response.json())",
+    "youtube_mode_python": "import requests\n\nurl = 'http://localhost:5678/webhook/video-translate'\ndata = {\n    'mode': 'youtube',\n    'youtube_url': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',\n    'source_language': 'en',\n    'target_language': 'th',\n    'voice_mode': 'male',\n    'video_speed': '2.0'\n}\n\nresponse = requests.post(url, json=data)\nprint(response.json())",
+    "check_status_python": "import requests\nimport time\n\n# ตรวจสอบสถานะงาน\ntask_id = '550e8400-e29b-41d4-a716-446655440000'\nstatus_url = f'http://localhost:5556/api/status/{task_id}'\n\ndef check_status():\n    response = requests.get(status_url)\n    data = response.json()\n    \n    if data['status'] == 'completed':\n        print('Processing completed!')\n        download_url = f'http://localhost:5556/api/download/{task_id}'\n        print(f'Download URL: {download_url}')\n        return True\n    elif data['status'] == 'error':\n        print(f'Error: {data.get(\"message\", \"Unknown error\")}')\n        return True\n    else:\n        print(f'Status: {data[\"status\"]}, Progress: {data.get(\"progress\", 0)}%')\n        return False\n\n# ตรวจสอบสถานะทุก 5 วินาที\nwhile not check_status():\n    time.sleep(5)"
+  },
+  "javascript_examples": {
+    "auto_mode_javascript": "// ใช้ใน Node.js หรือ browser\nasync function translateVideo() {\n    const videoFile = document.getElementById('videoFile').files[0];\n    const reader = new FileReader();\n    \n    reader.onload = async function() {\n        const base64Data = reader.result.split(',')[1];\n        \n        const response = await fetch('http://localhost:5678/webhook/video-translate', {\n            method: 'POST',\n            headers: {\n                'Content-Type': 'application/json'\n            },\n            body: JSON.stringify({\n                mode: 'auto',\n                video_file: base64Data,\n                source_language: 'th',\n                target_language: 'en',\n                voice_mode: 'female',\n                video_speed: '1.0'\n            })\n        });\n        \n        const result = await response.json();\n        console.log(result);\n    };\n    \n    reader.readAsDataURL(videoFile);\n}",
+    "youtube_mode_javascript": "async function translateYouTubeVideo() {\n    const response = await fetch('http://localhost:5678/webhook/video-translate', {\n        method: 'POST',\n        headers: {\n            'Content-Type': 'application/json'\n        },\n        body: JSON.stringify({\n            mode: 'youtube',\n            youtube_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',\n            source_language: 'en',\n            target_language: 'th',\n            voice_mode: 'male',\n            video_speed: '2.0'\n        })\n    });\n    \n    const result = await response.json();\n    console.log(result);\n}",
+    "check_status_javascript": "async function checkStatus(taskId) {\n    const response = await fetch(`http://localhost:5556/api/status/${taskId}`);\n    const data = await response.json();\n    \n    if (data.status === 'completed') {\n        console.log('Processing completed!');\n        const downloadUrl = `http://localhost:5556/api/download/${taskId}`;\n        console.log(`Download URL: ${downloadUrl}`);\n        return true;\n    } else if (data.status === 'error') {\n        console.log(`Error: ${data.message || 'Unknown error'}`);\n        return true;\n    } else {\n        console.log(`Status: ${data.status}, Progress: ${data.progress || 0}%`);\n        return false;\n    }\n}\n\n// ตรวจสอบสถานะทุก 5 วินาที\nasync function monitorStatus(taskId) {\n    while (!(await checkStatus(taskId))) {\n        await new Promise(resolve => setTimeout(resolve, 5000));\n    }\n}"
+  },
+  "postman_collection": {
+    "info": {
+      "name": "Video Translator N8N Workflow",
+      "description": "Collection สำหรับทดสอบ N8N workflow ของ Video Translator",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Auto Mode",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"mode\": \"auto\",\n  \"video_file\": \"base64_encoded_video_data\",\n  \"source_language\": \"th\",\n  \"target_language\": \"en\",\n  \"voice_mode\": \"female\",\n  \"video_speed\": \"1.0\"\n}"
+          },
+          "url": {
+            "raw": "http://localhost:5678/webhook/video-translate",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "5678",
+            "path": ["webhook", "video-translate"]
+          }
+        }
+      },
+      {
+        "name": "Step Mode",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"mode\": \"step\",\n  \"video_file\": \"base64_encoded_video_data\",\n  \"source_language\": \"th\",\n  \"target_language\": \"en\",\n  \"voice_mode\": \"female\",\n  \"video_speed\": \"1.0\"\n}"
+          },
+          "url": {
+            "raw": "http://localhost:5678/webhook/video-translate",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "5678",
+            "path": ["webhook", "video-translate"]
+          }
+        }
+      },
+      {
+        "name": "YouTube Mode",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"mode\": \"youtube\",\n  \"youtube_url\": \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\",\n  \"source_language\": \"en\",\n  \"target_language\": \"th\",\n  \"voice_mode\": \"male\",\n  \"video_speed\": \"2.0\"\n}"
+          },
+          "url": {
+            "raw": "http://localhost:5678/webhook/video-translate",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "5678",
+            "path": ["webhook", "video-translate"]
+          }
+        }
+      }
+    ]
+  }
+} 

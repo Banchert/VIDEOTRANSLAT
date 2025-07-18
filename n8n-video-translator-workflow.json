@@ -1,0 +1,685 @@
+{
+  "name": "Video Translator Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "video-translate",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "video-translate-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.mode }}",
+              "operation": "equal",
+              "value2": "auto"
+            }
+          ]
+        }
+      },
+      "id": "mode-checker",
+      "name": "Mode Checker",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "http://localhost:5556/api/upload/auto",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "multipart/form-data"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "video_file",
+              "value": "={{ $json.video_file }}"
+            },
+            {
+              "name": "source_language",
+              "value": "={{ $json.source_language }}"
+            },
+            {
+              "name": "target_language", 
+              "value": "={{ $json.target_language }}"
+            },
+            {
+              "name": "voice_mode",
+              "value": "={{ $json.voice_mode }}"
+            },
+            {
+              "name": "video_speed",
+              "value": "={{ $json.video_speed }}"
+            }
+          ]
+        }
+      },
+      "id": "auto-mode-processor",
+      "name": "Auto Mode Processor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 200]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "http://localhost:5556/api/upload/step",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "multipart/form-data"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "video_file",
+              "value": "={{ $json.video_file }}"
+            },
+            {
+              "name": "source_language",
+              "value": "={{ $json.source_language }}"
+            },
+            {
+              "name": "target_language",
+              "value": "={{ $json.target_language }}"
+            },
+            {
+              "name": "voice_mode",
+              "value": "={{ $json.voice_mode }}"
+            },
+            {
+              "name": "video_speed",
+              "value": "={{ $json.video_speed }}"
+            }
+          ]
+        }
+      },
+      "id": "step-mode-processor",
+      "name": "Step Mode Processor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 400]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "http://localhost:5556/api/youtube/realtime",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "youtube_url",
+              "value": "={{ $json.youtube_url }}"
+            },
+            {
+              "name": "source_language",
+              "value": "={{ $json.source_language }}"
+            },
+            {
+              "name": "target_language",
+              "value": "={{ $json.target_language }}"
+            },
+            {
+              "name": "voice_mode",
+              "value": "={{ $json.voice_mode }}"
+            },
+            {
+              "name": "video_speed",
+              "value": "={{ $json.video_speed }}"
+            }
+          ]
+        }
+      },
+      "id": "youtube-processor",
+      "name": "YouTube Processor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 600]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.mode }}",
+              "operation": "equal",
+              "value2": "youtube"
+            }
+          ]
+        }
+      },
+      "id": "youtube-checker",
+      "name": "YouTube Checker",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [460, 600]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "url": "http://localhost:5556/api/status/={{ $json.task_id }}",
+        "options": {}
+      },
+      "id": "status-checker",
+      "name": "Status Checker",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.status }}",
+              "operation": "equal",
+              "value2": "completed"
+            }
+          ]
+        }
+      },
+      "id": "completion-checker",
+      "name": "Completion Checker",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "url": "http://localhost:5556/api/download/={{ $json.task_id }}",
+        "options": {}
+      },
+      "id": "download-result",
+      "name": "Download Result",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1340, 200]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "url": "http://localhost:5556/api/text/={{ $json.task_id }}/original",
+        "options": {}
+      },
+      "id": "get-original-text",
+      "name": "Get Original Text",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1340, 400]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "url": "http://localhost:5556/api/text/={{ $json.task_id }}/translated",
+        "options": {}
+      },
+      "id": "get-translated-text",
+      "name": "Get Translated Text",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1340, 600]
+    },
+    {
+      "parameters": {
+        "wait": 5
+      },
+      "id": "wait-5-seconds",
+      "name": "Wait 5 Seconds",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1120, 500]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "http://localhost:5556/api/step/={{ $json.task_id }}/2",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "id": "step-2-vocal-removal",
+      "name": "Step 2: Vocal Removal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [900, 700]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "http://localhost:5556/api/step/={{ $json.task_id }}/3",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "id": "step-3-stt",
+      "name": "Step 3: Speech to Text",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [900, 800]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "http://localhost:5556/api/step/={{ $json.task_id }}/4",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "id": "step-4-translation",
+      "name": "Step 4: Translation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [900, 900]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "http://localhost:5556/api/step/={{ $json.task_id }}/5",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "id": "step-5-tts",
+      "name": "Step 5: Text to Speech",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [900, 1000]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "http://localhost:5556/api/step/={{ $json.task_id }}/6",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "id": "step-6-audio-mixing",
+      "name": "Step 6: Audio Mixing",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [900, 1100]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "http://localhost:5556/api/step/={{ $json.task_id }}/7",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "id": "step-7-video-merge",
+      "name": "Step 7: Video Merge",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [900, 1200]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "url": "http://localhost:5556/api/languages/supported",
+        "options": {}
+      },
+      "id": "get-supported-languages",
+      "name": "Get Supported Languages",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 800]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "url": "http://localhost:5556/api/voice_modes/supported",
+        "options": {}
+      },
+      "id": "get-voice-modes",
+      "name": "Get Voice Modes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 900]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "url": "http://localhost:5556/api/system/status",
+        "options": {}
+      },
+      "id": "system-status",
+      "name": "System Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 1000]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "http://localhost:5556/api/stop/={{ $json.task_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "id": "stop-processing",
+      "name": "Stop Processing",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1120, 700]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "http://localhost:5556/api/translate/test",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $json.test_text }}"
+            },
+            {
+              "name": "source_language",
+              "value": "={{ $json.source_language }}"
+            },
+            {
+              "name": "target_language",
+              "value": "={{ $json.target_language }}"
+            }
+          ]
+        }
+      },
+      "id": "test-translation",
+      "name": "Test Translation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 1100]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Mode Checker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mode Checker": {
+      "main": [
+        [
+          {
+            "node": "Auto Mode Processor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Step Mode Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto Mode Processor": {
+      "main": [
+        [
+          {
+            "node": "Status Checker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Step Mode Processor": {
+      "main": [
+        [
+          {
+            "node": "Status Checker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YouTube Checker": {
+      "main": [
+        [
+          {
+            "node": "YouTube Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YouTube Processor": {
+      "main": [
+        [
+          {
+            "node": "Status Checker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status Checker": {
+      "main": [
+        [
+          {
+            "node": "Completion Checker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Completion Checker": {
+      "main": [
+        [
+          {
+            "node": "Download Result",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Original Text",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Translated Text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 5 Seconds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 5 Seconds": {
+      "main": [
+        [
+          {
+            "node": "Status Checker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Step 2: Vocal Removal": {
+      "main": [
+        [
+          {
+            "node": "Step 3: Speech to Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Step 3: Speech to Text": {
+      "main": [
+        [
+          {
+            "node": "Step 4: Translation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Step 4: Translation": {
+      "main": [
+        [
+          {
+            "node": "Step 5: Text to Speech",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Step 5: Text to Speech": {
+      "main": [
+        [
+          {
+            "node": "Step 6: Audio Mixing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Step 6: Audio Mixing": {
+      "main": [
+        [
+          {
+            "node": "Step 7: Video Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Step 7: Video Merge": {
+      "main": [
+        [
+          {
+            "node": "Status Checker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "video-translator",
+      "name": "Video Translator"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+} 

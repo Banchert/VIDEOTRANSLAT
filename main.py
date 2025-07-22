@@ -1039,11 +1039,18 @@ def translate_test():
         # Perform translation
         result = translation_service.translate(text, source_lang, target_lang, 'nllb-200')
         
-        if not result or 'translation' not in result:
+        if not result:
             print("❌ Translation failed - no result")
             return jsonify({'error': 'การแปลล้มเหลว'}), 500
         
-        translated_text = result.get('translation', '')
+        # Handle both string and dictionary results
+        if isinstance(result, str):
+            translated_text = result
+        elif isinstance(result, dict) and 'translation' in result:
+            translated_text = result.get('translation', '')
+        else:
+            print(f"❌ Unexpected result format: {type(result)}")
+            return jsonify({'error': 'รูปแบบผลลัพธ์ไม่ถูกต้อง'}), 500
         
         if not translated_text.strip():
             print("❌ Translation result is empty")

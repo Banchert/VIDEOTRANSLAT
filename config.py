@@ -113,7 +113,7 @@ STT_MODELS = {
 }
 
 TRANSLATION_MODELS = {
-    'nllb-200': 'facebook/nllb-200-3.3B',
+    'nllb-200': 'models/nllb-200-3.3B',
     'nllb-200-distilled': 'facebook/nllb-200-distilled-1.3B',  # fallback distilled model
 }
 
